@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://placapi.github.io/sitemap.xml

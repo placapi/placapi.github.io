@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PlacApi · Los datos vehiculares de Colombia, en JSON</title>
+<meta name="description" content="Referencia abierta de PlacApi: 36 endpoints REST sobre RUNT, SIMIT, SOAT, FASECOLDA, pico y placa y antecedentes de Colombia. OpenAPI 3.1 y colección Postman para descargar.">
+<link rel="canonical" href="https://placapi.github.io/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="PlacApi · Los datos vehiculares de Colombia, en JSON">
+<meta property="og:description" content="36 endpoints REST sobre RUNT, SIMIT, SOAT, FASECOLDA y pico y placa. OpenAPI 3.1 abierto.">
+<meta property="og:url" content="https://placapi.github.io/">
+<meta name="theme-color" content="#006d37">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Referencia abierta de PlacApi",
+  "url": "https://placapi.github.io/",
+  "inLanguage": "es-CO",
+  "publisher": {
+    "@type": "Organization",
+    "name": "PlacApi",
+    "url": "https://placapi.com",
+    "sameAs": [
+      "https://github.com/placapi",
+      "https://www.linkedin.com/company/placapi/",
+      "https://x.com/PlacApi"
+    ]
+  }
+}
+</script>
+
+<style>
+:root{
+  /* Design system PlacApi — "Fintech Automotive Modular". No hex sueltos fuera de aquí. */
+  --verde:#006d37;
+  --verde-alto:#00522a;
+  --navy:#4f6073;
+  --mint:#f0f9f4;
+  --gris:#f8f9fa;
+  --tinta:#0f1a14;               /* casi-negro tirando a verde, no gris neutro */
+  --tinta-suave:#1b2a22;
+  --placa:#f2c230;               /* amarillo de la placa particular colombiana */
+  --ok:#2ecc71;
+  --linea:rgba(79,96,115,.16);
+  --radio:1rem;
+  --gap:1rem;
+  --ancho:72rem;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  font-family:Montserrat,system-ui,-apple-system,"Segoe UI",sans-serif;
+  color:var(--navy);
+  background:var(--gris);
+  line-height:1.6;
+  font-size:1rem;
+}
+h1,h2,h3{color:var(--tinta);line-height:1.15;margin:0;letter-spacing:-.02em}
+a{color:var(--verde);text-decoration-thickness:1px;text-underline-offset:.2em}
+a:focus-visible,button:focus-visible{outline:3px solid var(--verde);outline-offset:3px;border-radius:.35rem}
+code,pre{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+img{max-width:100%}
+
+.envoltura{max-width:var(--ancho);margin-inline:auto;padding-inline:1.25rem}
+
+/* ---------- barra ---------- */
+.barra{
+  position:sticky;top:0;z-index:20;
+  background:rgba(248,249,250,.82);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--linea);
+}
+.barra .envoltura{display:flex;align-items:center;gap:1rem;min-height:3.5rem;flex-wrap:wrap}
+.marca{font-weight:900;letter-spacing:-.03em;font-size:1.15rem;color:var(--tinta);text-decoration:none}
+.marca span{color:var(--verde)}
+.barra nav{margin-left:auto;display:flex;gap:.25rem;flex-wrap:wrap}
+.barra nav a{
+  font-size:.85rem;font-weight:600;color:var(--navy);text-decoration:none;
+  padding:.5rem .7rem;border-radius:.6rem;
+}
+.barra nav a:hover{background:var(--mint);color:var(--verde-alto)}
+.barra nav a.principal{background:var(--verde);color:#fff}
+.barra nav a.principal:hover{background:var(--verde-alto);color:#fff}
+
+/* ---------- héroe: la placa entra, el JSON sale ---------- */
+.heroe{padding:clamp(2.5rem,6vw,4.5rem) 0 clamp(2rem,4vw,3rem)}
+.heroe-rejilla{display:grid;gap:clamp(1.5rem,4vw,2.5rem);grid-template-columns:1fr}
+@media(min-width:60rem){.heroe-rejilla{grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);align-items:center}}
+
+.etiqueta{
+  font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--verde);margin:0 0 .9rem
+}
+.heroe h1{font-size:clamp(1.9rem,4.6vw,2.85rem);font-weight:900;max-width:15ch;text-wrap:balance}
+.heroe h1 em{font-style:normal;color:var(--verde)}
+.entradilla{font-size:clamp(1rem,2vw,1.13rem);max-width:34rem;margin:1.1rem 0 1.6rem}
+.acciones{display:flex;gap:.7rem;flex-wrap:wrap}
+.boton{
+  display:inline-flex;align-items:center;gap:.5rem;
+  min-height:3rem;padding:0 1.15rem;border-radius:.75rem;
+  font-weight:800;font-size:.92rem;text-decoration:none;border:1px solid transparent;
+  transition:background .18s ease,transform .18s ease,border-color .18s ease;
+}
+.boton-lleno{background:var(--verde);color:#fff}
+.boton-lleno:hover{background:var(--verde-alto);transform:translateY(-1px)}
+.boton-borde{background:#fff;color:var(--tinta);border-color:var(--linea)}
+.boton-borde:hover{border-color:var(--verde);color:var(--verde-alto);transform:translateY(-1px)}
+
+/* la placa */
+.escena{display:grid;gap:1.05rem;justify-items:center}
+.placa{
+  width:min(100%,25rem);
+  background:linear-gradient(180deg,#f7d24e 0%,var(--placa) 42%,#e0ad1c 100%);
+  border-radius:.85rem;
+  padding:.5rem .75rem .7rem;
+  border:2px solid rgba(15,26,20,.55);
+  box-shadow:0 14px 30px -14px rgba(15,26,20,.55), inset 0 2px 0 rgba(255,255,255,.6);
+  text-align:center;
+  position:relative;
+}
+.placa::before,.placa::after{
+  content:"";position:absolute;top:.55rem;width:.42rem;height:.42rem;border-radius:50%;
+  background:rgba(15,26,20,.3);box-shadow:inset 0 1px 1px rgba(255,255,255,.5)
+}
+.placa::before{left:.75rem}
+.placa::after{right:.75rem}
+.placa-pais{
+  font-size:.62rem;font-weight:800;letter-spacing:.42em;text-transform:uppercase;
+  color:rgba(15,26,20,.72);padding-left:.42em
+}
+.placa-texto{
+  font-family:"JetBrains Mono",monospace;font-weight:700;
+  font-size:clamp(2.8rem,11vw,4.1rem);line-height:1.05;letter-spacing:.07em;
+  color:var(--tinta);
+  text-shadow:0 1px 0 rgba(255,255,255,.55);
+  min-height:1.05em;
+}
+.cursor{
+  display:inline-block;width:.08em;height:.82em;vertical-align:-.06em;
+  background:var(--tinta);margin-left:.06em;animation:parpadeo 1s steps(2) infinite
+}
+@keyframes parpadeo{50%{opacity:0}}
+.flecha{
+  font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--navy);
+  display:flex;align-items:center;gap:.55rem
+}
+.flecha::before,.flecha::after{content:"";height:1px;width:2rem;background:var(--linea)}
+
+/* respuesta */
+.consola{
+  width:100%;border-radius:var(--radio);overflow:hidden;
+  background:var(--tinta);border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 20px 45px -25px rgba(15,26,20,.8)
+}
+.consola-cabecera{
+  display:flex;align-items:center;gap:.5rem;
+  padding:.6rem .9rem;background:var(--tinta-suave);
+  font-size:.72rem;font-weight:700;letter-spacing:.06em;color:rgba(255,255,255,.6)
+}
+.punto{width:.55rem;height:.55rem;border-radius:50%;background:var(--ok);flex:none}
+.consola pre{
+  margin:0;padding:1rem;overflow-x:auto;
+  font-size:.78rem;line-height:1.65;color:#d7e6dc;tab-size:2
+}
+.consola .k{color:#8fd3ae}
+.consola .s{color:var(--placa)}
+.consola .n{color:#9fc6ff}
+
+/* ---------- bloques ---------- */
+.bloque{padding:clamp(2.5rem,5vw,3.5rem) 0;border-top:1px solid var(--linea)}
+.bloque-cabecera{max-width:44rem;margin-bottom:1.75rem}
+.bloque h2{font-size:clamp(1.4rem,3.2vw,1.9rem);font-weight:800}
+.bloque-cabecera p{margin:.6rem 0 0}
+
+.bento{display:grid;gap:var(--gap);grid-template-columns:repeat(auto-fit,minmax(min(100%,17rem),1fr))}
+.tarjeta{
+  background:#fff;border:1px solid var(--linea);border-radius:var(--radio);
+  padding:1.25rem;display:flex;flex-direction:column;gap:.55rem
+}
+.tarjeta h3{font-size:1rem;font-weight:800}
+.tarjeta p{margin:0;font-size:.88rem}
+.tarjeta ul{margin:.35rem 0 0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:.35rem}
+.tarjeta li{
+  font-family:"JetBrains Mono",monospace;font-size:.72rem;
+  background:var(--mint);color:var(--verde-alto);
+  padding:.22rem .45rem;border-radius:.4rem;border:1px solid rgba(0,109,55,.12)
+}
+.tarjeta-ancha{grid-column:1/-1;background:var(--mint);border-color:rgba(0,109,55,.16)}
+.tarjeta-ancha li{background:#fff}
+.conteo{
+  margin-left:auto;font-family:"JetBrains Mono",monospace;font-size:.72rem;
+  font-weight:700;color:var(--navy)
+}
+.tarjeta-titulo{display:flex;align-items:baseline;gap:.5rem}
+
+/* arranque */
+.arranque{display:grid;gap:var(--gap);grid-template-columns:1fr}
+@media(min-width:52rem){.arranque{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+.paso{background:#fff;border:1px solid var(--linea);border-radius:var(--radio);overflow:hidden}
+.paso-cabecera{padding:.85rem 1.1rem;border-bottom:1px solid var(--linea);font-weight:800;font-size:.85rem}
+.paso pre{margin:0;padding:1rem 1.1rem;overflow-x:auto;font-size:.76rem;line-height:1.7;color:var(--tinta)}
+.paso pre .c{color:var(--navy);opacity:.75}
+.paso pre .f{color:var(--verde)}
+
+.aviso{
+  margin-top:1.5rem;padding:1rem 1.15rem;border-radius:var(--radio);
+  background:var(--mint);border:1px solid rgba(0,109,55,.16);font-size:.88rem
+}
+.aviso strong{color:var(--verde-alto)}
+
+/* pie */
+footer{background:var(--tinta);color:rgba(255,255,255,.66);padding:2.5rem 0;font-size:.85rem}
+footer h2{color:#fff;font-size:1.05rem;font-weight:800;margin-bottom:.5rem}
+footer a{color:#fff}
+.pie-rejilla{display:grid;gap:1.5rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,14rem),1fr))}
+.pie-enlaces{list-style:none;margin:0;padding:0;display:grid;gap:.4rem}
+.pie-nota{margin-top:2rem;padding-top:1.25rem;border-top:1px solid rgba(255,255,255,.12);font-size:.78rem}
+
+@media(max-width:40rem){
+  .barra nav a:not(.principal){display:none}
+}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+}
+</style>
+</head>
+<body>
+
+<header class="barra">
+  <div class="envoltura">
+    <a class="marca" href="/">Plac<span>Api</span></a>
+    <nav>
+      <a href="#endpoints">Endpoints</a>
+      <a href="#arranque">Arranque</a>
+      <a href="reference.html">Referencia</a>
+      <a class="principal" href="https://placapi.com">placapi.com</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="heroe">
+    <div class="envoltura heroe-rejilla">
+      <div>
+        <p class="etiqueta">Referencia abierta · OpenAPI 3.1</p>
+        <h1>Una placa entra. El <em>historial completo</em> sale en JSON.</h1>
+        <p class="entradilla">
+          Consultar el RUNT en Colombia hoy significa resolver un captcha, y repetirlo en otros
+          cuatro portales para el SOAT, las multas, el impuesto y el avalúo. PlacApi lo resuelve
+          en una llamada REST. Esta es su especificación, abierta y sin registro.
+        </p>
+        <div class="acciones">
+          <a class="boton boton-lleno" href="reference.html">Ver los 36 endpoints</a>
+          <a class="boton boton-borde" href="openapi.json" download>Descargar OpenAPI 3.1</a>
+        </div>
+      </div>
+
+      <div class="escena">
+        <div class="placa">
+          <div class="placa-pais">Colombia</div>
+          <div class="placa-texto" id="placa" aria-label="Placa de ejemplo ABC123">ABC123</div>
+        </div>
+        <p class="flecha">POST /api/consulta</p>
+        <div class="consola">
+          <div class="consola-cabecera"><span class="punto"></span> 200 OK · 1 crédito</div>
+<pre><code>{
+  <span class="k">"plate"</span>: <span class="s">"ABC123"</span>,
+  <span class="k">"informacionGeneral"</span>: {
+    <span class="k">"marca"</span>: <span class="s">"MAZDA"</span>,
+    <span class="k">"linea"</span>: <span class="s">"CX-30"</span>,
+    <span class="k">"modelo"</span>: <span class="s">"2023"</span>,
+    <span class="k">"cilindraje"</span>: <span class="s">"2000"</span>,
+    <span class="k">"estadoDelVehiculo"</span>: <span class="s">"ACTIVO"</span>,
+    <span class="k">"organismoTransito"</span>: <span class="s">"SDM BOGOTA"</span>,
+    <span class="k">"tieneGravamenes"</span>: <span class="s">"NO"</span>
+  },
+  <span class="k">"soat"</span>: { <span class="k">"vigente"</span>: <span class="n">true</span>, <span class="k">"diasRestantes"</span>: <span class="n">213</span> },
+  <span class="k">"tecnomecanica"</span>: { <span class="k">"vigente"</span>: <span class="n">true</span> }
+}</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloque" id="endpoints">
+    <div class="envoltura">
+      <div class="bloque-cabecera">
+        <h2>Qué se puede consultar</h2>
+        <p>
+          36 endpoints, todos <code>POST</code>, todos con respuesta JSON. Se agrupan por lo que
+          verifican: el vehículo, el conductor, la persona o la empresa.
+        </p>
+      </div>
+      <div class="bento">
+
+        <article class="tarjeta">
+          <div class="tarjeta-titulo"><h3>Reporte completo</h3><span class="conteo">1</span></div>
+          <p>Todas las fuentes del vehículo y del propietario en una sola llamada.</p>
+          <ul><li>consulta-full</li></ul>
+        </article>
+
+        <article class="tarjeta">
+          <div class="tarjeta-titulo"><h3>Vehículo (RUNT)</h3><span class="conteo">5</span></div>
+          <p>Ficha, estado y verificación del vehículo por placa o por VIN.</p>
+          <ul><li>consulta</li><li>consulta-por-vin</li><li>vehiculo-basico</li><li>apto-traspaso</li><li>perdida-total</li></ul>
+        </article>
+
+        <article class="tarjeta">
+          <div class="tarjeta-titulo"><h3>Multas y comparendos (SIMIT)</h3><span class="conteo">6</span></div>
+          <p>Comparendos, resoluciones, acuerdos y paz y salvo por placa o cédula.</p>
+          <ul><li>multas</li><li>comparendos</li><li>comparendo</li><li>acuerdos-pago</li><li>resoluciones</li><li>paz-salvo</li></ul>
+        </article>
+
+        <article class="tarjeta">
+          <div class="tarjeta-titulo"><h3>Licencias de conducción</h3><span class="conteo">2</span></div>
+          <p>Licencias del conductor y suspensiones o cancelaciones por cédula.</p>
+          <ul><li>licencia</li><li>suspension-licencia</li></ul>
+        </article>
+
+        <article class="tarjeta">
+          <div class="tarjeta-titulo"><h3>Avalúo comercial (FASECOLDA)</h3><span class="conteo">3</span></div>
+          <p>Valor comercial de referencia por placa o por código FASECOLDA.</p>
+          <ul><li>avaluo</li><li>avaluo-por-codigo</li><li>catalogo</li></ul>
+        </article>
+
+        <article class="tarjeta">
+          <div class="tarjeta-titulo"><h3>Impuestos y movilidad</h3><span class="conteo">2</span></div>
+          <p>Impuesto vehicular y restricción de pico y placa en 30 ciudades.</p>
+          <ul><li>impuestos</li><li>pico-y-placa</li></ul>
+        </article>
+
+        <article class="tarjeta">
+          <div class="tarjeta-titulo"><h3>Antecedentes de personas</h3><span class="conteo">10</span></div>
+          <p>Verificación de una persona, no de un vehículo: identidad, clasificación social, seguridad social, puesto de votación, disciplinarios, fiscales y judiciales.</p>
+          <ul><li>cedula</li><li>sisben</li><li>rui</li><li>puesto-votacion</li><li>ruaf</li><li>antecedentes-disciplinarios</li><li>antecedentes-fiscales</li><li>antecedentes-judiciales</li><li>listas-restrictivas</li><li>notificaciones-internacionales</li></ul>
+        </article>
+
+        <article class="tarjeta">
+          <div class="tarjeta-titulo"><h3>Empresas y Estado</h3><span class="conteo">4</span></div>
+          <p>Debida diligencia sobre la contraparte: registro mercantil, contratación estatal, procesos judiciales y declaración de bienes y rentas.</p>
+          <ul><li>rues</li><li>secop</li><li>rama-judicial</li><li>sigep</li></ul>
+        </article>
+
+        <article class="tarjeta">
+          <div class="tarjeta-titulo"><h3>Prendas y garantías</h3><span class="conteo">1</span></div>
+          <p>Garantías mobiliarias inscritas sobre el vehículo (RGM).</p>
+          <ul><li>garantias-rgm</li></ul>
+        </article>
+
+        <article class="tarjeta tarjeta-ancha">
+          <div class="tarjeta-titulo"><h3>Fuera de Colombia</h3><span class="conteo">2</span></div>
+          <p>Consulta vehicular en Perú y México. Cobertura menor que la colombiana.</p>
+          <ul><li>vehiculo-pe</li><li>vehiculo-mx</li></ul>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="bloque" id="arranque">
+    <div class="envoltura">
+      <div class="bloque-cabecera">
+        <h2>Arranque</h2>
+        <p>
+          Autenticación por cabecera <code>x-api-key</code>. Servidor
+          <code>https://placapi.com/api</code>. Sin SDK obligatorio: es HTTP y JSON.
+        </p>
+      </div>
+      <div class="arranque">
+        <div class="paso">
+          <div class="paso-cabecera">Con curl</div>
+<pre><code><span class="f">curl</span> -X POST 'https://placapi.com/api/consulta' \
+  -H 'x-api-key: pk_live_TU_CLAVE' \
+  -H 'content-type: application/json' \
+  -d '{"placa":"ABC123","docType":"CC","docNumber":"1020304050"}'</code></pre>
+        </div>
+        <div class="paso">
+          <div class="paso-cabecera">Con fetch, sin instalar nada</div>
+<pre><code><span class="f">const</span> r = <span class="f">await</span> fetch('https://placapi.com/api/consulta', {
+  method: 'POST',
+  headers: {
+    'x-api-key': process.env.PLACAPI_KEY,
+    'content-type': 'application/json'
+  },
+  body: JSON.stringify({
+    placa: 'ABC123', docType: 'CC', docNumber: '1020304050'
+  })
+})
+
+<span class="f">const</span> { data } = <span class="f">await</span> r.json()
+console.log(data.informacionGeneral.marca) <span class="c">// MAZDA</span></code></pre>
+        </div>
+      </div>
+
+      <div class="aviso">
+        <strong>Se cobra la consulta con datos, no el intento.</strong>
+        Un endpoint que responde sin resultado no descuenta crédito en la web.
+        <code>consulta-full</code> cuesta 2 créditos; el resto, 1. El límite es de 1.000
+        consultas por minuto por clave. Las tarifas vigentes están en
+        <a href="https://placapi.com/comprar">placapi.com/comprar</a>.
+      </div>
+    </div>
+  </section>
+
+  <section class="bloque">
+    <div class="envoltura">
+      <div class="bloque-cabecera">
+        <h2>Repositorios</h2>
+        <p>Todo lo de esta página es abierto y se puede clonar.</p>
+      </div>
+      <div class="bento">
+        <article class="tarjeta">
+          <h3><a href="https://github.com/placapi/placapi-openapi">placapi-openapi</a></h3>
+          <p>Especificación OpenAPI 3.1 y colección de Postman. Genera un cliente en cualquier lenguaje.</p>
+        </article>
+        <article class="tarjeta">
+          <h3><a href="https://github.com/placapi/placapi-node">placapi-node</a></h3>
+          <p>Cliente oficial para Node.js y TypeScript. Envoltorio sobre <code>fetch</code>, sin dependencias.</p>
+        </article>
+        <article class="tarjeta">
+          <h3><a href="https://github.com/placapi/runt-simit-colombia">runt-simit-colombia</a></h3>
+          <p>Guía de referencia sobre qué publica de verdad cada fuente oficial colombiana, y qué no.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="envoltura">
+    <div class="pie-rejilla">
+      <div>
+        <h2>PlacApi</h2>
+        <p>La API REST de consulta vehicular y de personas de Colombia. Bogotá, Colombia.</p>
+      </div>
+      <div>
+        <h2>Producto</h2>
+        <ul class="pie-enlaces">
+          <li><a href="https://placapi.com">Sitio y consulta web</a></li>
+          <li><a href="https://placapi.com/docs">Documentación</a></li>
+          <li><a href="https://placapi.com/comprar">Precios</a></li>
+          <li><a href="https://placapi.com/integracion">Integración</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Abierto</h2>
+        <ul class="pie-enlaces">
+          <li><a href="reference.html">Referencia interactiva</a></li>
+          <li><a href="openapi.json">openapi.json</a></li>
+          <li><a href="postman.json">postman.json</a></li>
+          <li><a href="https://github.com/placapi">github.com/placapi</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="pie-nota">
+      PlacApi no es una entidad oficial del Gobierno colombiano. Los datos provienen de fuentes
+      públicas: RUNT, SIMIT, FASECOLDA, RUES y las demás que cada endpoint declara.
+      Espejo abierto de <a href="https://placapi.com">placapi.com</a>.
+    </p>
+  </div>
+</footer>
+
+<script>
+// La placa se "escribe" una sola vez al cargar: es la entrada del sistema, y verla
+// formarse antes del JSON es lo que cuenta la historia. Un solo momento, no efectos sueltos.
+(function () {
+  var destino = document.getElementById('placa');
+  if (!destino) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var texto = 'ABC123';
+  var cursor = document.createElement('span');
+  cursor.className = 'cursor';
+  destino.textContent = '';
+  destino.appendChild(cursor);
+
+  var i = 0;
+  var reloj = setInterval(function () {
+    cursor.remove();
+    destino.textContent = texto.slice(0, ++i);
+    if (i < texto.length) destino.appendChild(cursor);
+    else clearInterval(reloj);
+  }, 110);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Referencia de la API · PlacApi</title>
+<meta name="description" content="Referencia interactiva de los 36 endpoints de PlacApi: RUNT, SIMIT, SOAT, FASECOLDA, pico y placa y antecedentes de Colombia. Generada desde el OpenAPI 3.1.">
+<link rel="canonical" href="https://placapi.github.io/reference.html">
+<meta name="theme-color" content="#006d37">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --verde:#006d37;
+  --verde-alto:#00522a;
+  --navy:#4f6073;
+  --mint:#f0f9f4;
+  --gris:#f8f9fa;
+  --tinta:#0f1a14;
+  --linea:rgba(79,96,115,.16);
+}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;font-family:Montserrat,system-ui,sans-serif;background:var(--gris);color:var(--navy)}
+a:focus-visible{outline:3px solid var(--verde);outline-offset:3px;border-radius:.35rem}
+
+.barra{
+  position:sticky;top:0;z-index:60;
+  background:rgba(248,249,250,.9);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--linea);
+}
+.barra .envoltura{
+  max-width:none;margin-inline:auto;padding:0 1.25rem;
+  display:flex;align-items:center;gap:1rem;min-height:3.5rem;flex-wrap:wrap
+}
+.marca{font-weight:900;letter-spacing:-.03em;font-size:1.15rem;color:var(--tinta);text-decoration:none}
+.marca span{color:var(--verde)}
+.barra nav{margin-left:auto;display:flex;gap:.25rem;flex-wrap:wrap}
+.barra nav a{
+  font-size:.85rem;font-weight:600;color:var(--navy);text-decoration:none;
+  padding:.5rem .7rem;border-radius:.6rem
+}
+.barra nav a:hover{background:var(--mint);color:var(--verde-alto)}
+.barra nav a.principal{background:var(--verde);color:#fff}
+.barra nav a.principal:hover{background:var(--verde-alto)}
+
+/* Aviso de respaldo: si el CDN de Scalar no carga, la página no puede quedar en blanco. */
+#respaldo{max-width:44rem;margin:3rem auto;padding:1.5rem;background:#fff;border:1px solid var(--linea);border-radius:1rem}
+#respaldo h1{font-size:1.25rem;color:var(--tinta);margin:0 0 .5rem}
+#respaldo p{margin:.5rem 0;font-size:.92rem;line-height:1.6}
+#respaldo a{color:var(--verde);font-weight:700}
+</style>
+</head>
+<body>
+
+<header class="barra">
+  <div class="envoltura">
+    <a class="marca" href="/">Plac<span>Api</span></a>
+    <nav>
+      <a href="/">Inicio</a>
+      <a href="openapi.json" download>openapi.json</a>
+      <a href="postman.json" download>postman.json</a>
+      <a class="principal" href="https://placapi.com">placapi.com</a>
+    </nav>
+  </div>
+</header>
+
+<div id="respaldo">
+  <h1>Cargando la referencia…</h1>
+  <p>
+    Esta página renderiza el OpenAPI 3.1 de PlacApi. Si no aparece en unos segundos, el
+    contenido sigue disponible en crudo:
+    <a href="openapi.json">openapi.json</a> ·
+    <a href="postman.json">postman.json</a> ·
+    <a href="https://placapi.com/docs">documentación en placapi.com</a>.
+  </p>
+</div>
+
+<div id="referencia"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference"></script>
+<script>
+// Configuración por objeto, no por data-attribute: el JSON dentro del atributo obliga a
+// escapar las comillas del customCss y cualquier error ahí se ignora en silencio.
+(function () {
+  var respaldo = document.getElementById('respaldo');
+
+  var config = {
+    url: 'openapi.json',
+    theme: 'default',
+    layout: 'modern',
+    // Scalar carga sus propias fuentes y pisa las nuestras. Con esto manda Montserrat.
+    withDefaultFonts: false,
+    // La barra de Scalar ("Developer Tools", "Configure", "Share", "Deploy") es su producto,
+    // no esta documentación. Fuera.
+    showToolbar: 'never',
+    hideDownloadButton: false,
+    darkMode: false,
+    // Sin esto Scalar precarga un token de broma en base64 que parece una clave filtrada.
+    authentication: { preferredSecurityScheme: 'ApiKeyAuth', apiKey: { token: '' } },
+    customCss: [
+      ':root{',
+      '  --scalar-color-accent:#006d37;',
+      '  --scalar-color-1:#0f1a14;',
+      '  --scalar-color-2:#4f6073;',
+      '  --scalar-background-1:#ffffff;',
+      '  --scalar-background-2:#f8f9fa;',
+      '  --scalar-background-3:#f0f9f4;',
+      '  --scalar-border-color:rgba(79,96,115,.16);',
+      '  --scalar-radius:.5rem;',
+      '  --scalar-radius-lg:1rem;',
+      '  --scalar-font:Montserrat,system-ui,sans-serif;',
+      '  --scalar-font-code:"JetBrains Mono",ui-monospace,monospace;',
+      '  --scalar-bold:800;',
+      '}',
+      '.scalar-api-reference{font-family:Montserrat,system-ui,sans-serif}'
+    ].join('\n')
+  };
+
+  function arrancado() {
+    if (respaldo && respaldo.parentNode) respaldo.remove();
+  }
+
+  // Scalar rellena el campo de la clave con un placeholder en base64 ("ALL YOUR BASE ARE
+  // BELONG TO US"). En una página de documentación pública eso se lee como una clave
+  // filtrada. No hay opción de configuración para cambiarlo, así que se reemplaza al vuelo.
+  function limpiarPlaceholderDeClave(raiz) {
+    raiz.querySelectorAll('input[placeholder]').forEach(function (campo) {
+      if (/^QUxM/.test(campo.placeholder)) campo.placeholder = 'pk_live_TU_CLAVE';
+    });
+  }
+
+  if (window.Scalar && typeof window.Scalar.createApiReference === 'function') {
+    var destino = document.getElementById('referencia');
+    window.Scalar.createApiReference(destino, config);
+    arrancado();
+    // La referencia se monta de forma asíncrona y vuelve a montar secciones al navegar,
+    // así que no basta con una pasada: hay que observar el árbol.
+    new MutationObserver(function () { limpiarPlaceholderDeClave(destino); })
+      .observe(destino, { childList: true, subtree: true });
+    limpiarPlaceholderDeClave(destino);
+  } else if (respaldo) {
+    respaldo.querySelector('h1').textContent = 'La referencia interactiva no cargó';
+  }
+})();
+</script>
+</body>
+</html>
