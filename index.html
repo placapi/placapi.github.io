@@ -403,11 +403,12 @@ console.log(data.informacionGeneral.marca) <span class="c">// MAZDA</span></code
       </div>
 
       <div class="aviso">
-        <strong>Se cobra la consulta con datos, no el intento.</strong>
-        Un endpoint que responde sin resultado no descuenta crédito en la web.
-        <code>consulta-full</code> cuesta 2 créditos; el resto, 1. El límite es de 1.000
-        consultas por minuto por clave. Las tarifas vigentes están en
-        <a href="https://placapi.com/comprar">placapi.com/comprar</a>.
+        <strong>Prepago por consulta, sin cuota mensual.</strong>
+        <code>consulta-full</code> cuesta 2 créditos; el resto, 1. Repetir la misma consulta
+        dentro de la ventana de caché no vuelve a cobrar. Una consulta sin resultado
+        (<code>404</code>) trae 10 gratis al mes por cada código de sin-resultado; a partir de
+        ahí cobra como una normal. El límite es de 1.000 consultas por minuto por clave.
+        Tarifas vigentes en <a href="https://placapi.com/comprar">placapi.com/comprar</a>.
       </div>
     </div>
   </section>
