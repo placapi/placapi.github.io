@@ -18,7 +18,7 @@
       "model": "prepaid-credits",
       "pricePerQuery": 349,
       "currency": "COP",
-      "note": "Se cobra el número de créditos de cada endpoint (x-credits) solo cuando la consulta devuelve datos: 1 crédito la mayoría, 2 en consulta-full. Repetir la misma consulta (misma placa y documento) dentro de la ventana de caché se responde con fromCache: true y NO vuelve a cobrar; la ventana va de 24h (datos del vehículo) a 30 días según la fuente. Excepción: consulta-full siempre cobra sus 2 créditos."
+      "note": "Se cobra el número de créditos de cada endpoint (x-credits) cuando la consulta devuelve datos: 1 crédito la mayoría, 2 en consulta-full. Una consulta sin resultado (404) trae 10 gratis por mes y por cada código de sin-resultado, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir la misma consulta (misma placa y documento) dentro de la ventana de caché se responde con fromCache: true y NO vuelve a cobrar; la ventana va de 24h (datos del vehículo) a 30 días según la fuente. Excepción: consulta-full siempre cobra sus 2 créditos."
     }
   },
   "servers": [
