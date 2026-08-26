@@ -48,7 +48,7 @@
     },
     {
       "name": "Antecedentes de personas",
-      "description": "Verificación de una PERSONA, no de un vehículo: identidad, clasificación social, seguridad social, puesto de votación, disciplinarios, fiscales y judiciales por documento; listas de sanciones y notificaciones internacionales por nombre."
+      "description": "Verificación de una PERSONA, no de un vehículo: identidad, clasificación social, seguridad social, puesto de votación, disciplinarios, fiscales, judiciales y medidas correctivas por documento; listas de sanciones y notificaciones internacionales por nombre."
     },
     {
       "name": "Empresas y Estado",
@@ -2146,7 +2146,7 @@
         "tags": [
           "Avalúo comercial (FASECOLDA)"
         ],
-        "description": "Marcas, modelos, referencias y versiones de vehículos en Colombia, en cascada para poblar un selector: sin filtros trae las marcas y los años; con `marca`, sus referencias; con `marca` + `modelo` (o + `referencia`), las versiones. Cada versión trae su código —el mismo que acepta `/api/avaluo-por-codigo`—, el valor de mercado (`valorUsado`), el precio 0km (`valorNuevo`, solo en años que aún se venden nuevos) y la ficha técnica: cilindraje, potencia, airbags, puertas y tracción. No pide placa ni documento del propietario. Cada lista viene `null` cuando su filtro ya está decidido; con `listas=todas` vuelven todas. Un filtro que no existe en el catálogo responde 404 y no cobra. Costo: 1 crédito por consulta con datos.",
+        "description": "Marcas, modelos, referencias y versiones de vehículos en Colombia, en cascada para poblar un selector: sin filtros trae las marcas y los años; con `marca`, sus referencias; con `marca` + `modelo` (o + `referencia`), las versiones. Cada versión trae su código —el mismo que acepta `/api/avaluo-por-codigo`—, el valor de mercado (`valorUsado`), el precio 0km (`valorNuevo`, solo en años que aún se venden nuevos) y la ficha técnica: cilindraje, potencia, airbags, puertas y tracción. No pide placa ni documento del propietario. Cada lista viene `null` cuando su filtro ya está decidido; con `listas=todas` vuelven todas. Un filtro que no existe en el catálogo —o una combinación válida que no tiene ni una versión, como una marca que no vendió ese año— responde 404 `consulta_sin_resultado` y no cobra. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
           {
@@ -3354,6 +3354,117 @@
                   "mode": "live",
                   "fetchedAt": "2026-07-24T15:04:05.000Z",
                   "cost": 2
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cuerpo inválido: placa o documento con formato incorrecto (code: bad_request)."
+          },
+          "401": {
+            "description": "No autenticado o API key inválida (code: unauthorized)."
+          },
+          "402": {
+            "description": "Sin créditos suficientes (code: no_credits)."
+          },
+          "404": {
+            "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra nunca (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
+          },
+          "429": {
+            "description": "Rate limit excedido: 1000 consultas/minuto por API key (code: rate_limited). Respeta Retry-After."
+          },
+          "500": {
+            "description": "Error interno (code: internal_error)."
+          },
+          "502": {
+            "description": "La fuente oficial no respondió a tiempo (code: source_error). Reintentar más tarde. No se cobra crédito."
+          }
+        }
+      }
+    },
+    "/antecedentes-rnmc": {
+      "post": {
+        "operationId": "antecedentes-rnmc",
+        "summary": "Medidas correctivas (RNMC)",
+        "tags": [
+          "Antecedentes de personas"
+        ],
+        "description": "Medidas correctivas pendientes por cumplir de una persona, del Registro Nacional de Medidas Correctivas (**RNMC**) creado por la **Ley 1801 de 2016**, el Código Nacional de Seguridad y Convivencia Ciudadana. Son las sanciones por comportamientos contrarios a la convivencia —riñas, consumo en espacio público, porte de armas blancas, ruido— y quedan pendientes hasta que la persona paga la multa o cumple la medida pedagógica. **No es lo mismo que `/api/antecedentes-judiciales`**: aquél son asuntos pendientes con autoridades JUDICIALES y éste sanciones de POLICÍA; una persona limpia en uno puede no estarlo en el otro, así que una verificación seria consulta los dos. Devuelve el veredicto, el nombre completo del titular **sin enmascarar**, el número de registro con el que se verifica el certificado ante la Policía y el texto oficial literal, listo para mostrar o imprimir. Requiere la **fecha de expedición** del documento: la exige la fuente para autenticar, no nosotros. Una respuesta \"no tiene medidas\" **COBRA** —es el dato que se vino a comprar—; una fecha que no coincide responde 404 y no cobra. ⚠️ **Advertencia de cobertura que conviene conocer**: el registro certifica \"sin medidas correctivas\" también para documentos que **no existen**, así que este veredicto no prueba que la persona exista; para eso está `/api/cedula`. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
+        "x-credits": 1,
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "docNumber",
+                  "fechaExpedicion"
+                ],
+                "properties": {
+                  "docType": {
+                    "type": "string",
+                    "example": "CC",
+                    "description": "Tipo de documento. Por defecto `CC`. Es un registro de personas naturales: con NIT responde 400 `tipo_documento_no_soportado` sin cobrar y sin tocar la fuente.",
+                    "enum": [
+                      "CC",
+                      "CE",
+                      "TI",
+                      "PA"
+                    ]
+                  },
+                  "docNumber": {
+                    "type": "string",
+                    "example": "1020304050",
+                    "description": "Número de documento. Alias aceptados: `doc`, `documento`."
+                  },
+                  "fechaExpedicion": {
+                    "type": "string",
+                    "example": "05/10/2018",
+                    "description": "Fecha de expedición del documento en formato **DD/MM/AAAA**. Se aceptan guiones y puntos como separador y se normalizan. NO se acepta AAAA-MM-DD: la fuente lo leería al revés y respondería \"no coincide\" sin explicar por qué. Alias aceptados: `fecha`, `fecha_expedicion`."
+                  },
+                  "refresh": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+                  }
+                }
+              },
+              "example": {
+                "docType": "CC",
+                "docNumber": "1020304050",
+                "fechaExpedicion": "05/10/2018"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta ejecutada. Cada fuente reporta su propio status (ok, empty, error).",
+            "content": {
+              "application/json": {
+                "example": {
+                  "source": "medidas-correctivas",
+                  "status": "ok",
+                  "data": {
+                    "documento": "1020304050",
+                    "tipoDocumento": "Cédula de Ciudadanía",
+                    "nombre": "JUAN CARLOS PEREZ GOMEZ",
+                    "tieneAntecedentes": false,
+                    "descripcion": "No tiene medidas correctivas pendientes por cumplir",
+                    "medidas": [],
+                    "registroValidacion": "146449380",
+                    "fechaConsulta": "26/08/2026 03:32:47 p. m.",
+                    "textoOficial": "La Policía Nacional de Colombia informa: Que a la fecha, 26/08/2026 03:32:47 p. m. el ciudadano con Cédula de Ciudadanía Nº. 1020304050 y Nombre: JUAN CARLOS PEREZ GOMEZ. NO TIENE MEDIDAS CORRECTIVAS PENDIENTES POR CUMPLIR."
+                  },
+                  "mode": "live",
+                  "fetchedAt": "2026-07-24T15:04:05.000Z",
+                  "cost": 1
                 }
               }
             }
