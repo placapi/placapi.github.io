@@ -18,7 +18,7 @@
       "model": "prepaid-credits",
       "pricePerQuery": 349,
       "currency": "COP",
-      "note": "Se cobra el número de créditos de cada endpoint (x-credits) cuando la consulta devuelve datos: 1 crédito la mayoría, 2 en consulta-full. Una consulta sin resultado (404) trae 10 gratis por mes y por cada código de sin-resultado, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir la misma consulta (misma placa y documento) dentro de la ventana de caché se responde con fromCache: true y NO vuelve a cobrar; la ventana va de 24h (datos del vehículo) a 30 días según la fuente. Excepción: consulta-full siempre cobra sus 2 créditos."
+      "note": "Se cobra el número de créditos de cada endpoint (x-credits) cuando la consulta devuelve datos: 1 crédito la mayoría, 2 en varios de persona y 3 en consulta-full. Una consulta sin resultado (404) trae 10 gratis por mes y por cada código de sin-resultado, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir la misma consulta (misma placa y documento) dentro de la ventana de caché se responde con fromCache: true y NO vuelve a cobrar; la ventana va de 24h (datos del vehículo) a 30 días según la fuente. Excepción: consulta-full siempre cobra sus créditos. Repetir la MISMA consulta (misma cuenta, endpoint y placa) dentro de 10 segundos se responde igual pero no vuelve a cobrar: se reembolsa con el motivo duplicado_reciente."
     }
   },
   "tags": [
@@ -69,8 +69,8 @@
         "tags": [
           "Reporte completo"
         ],
-        "description": "Todo el conjunto de fuentes en UNA sola llamada: bundle vehicular completo (RUNT, SOAT, tecnomecánica, antecedentes, multas SIMIT, impuesto, avalúo FASECOLDA y pico y placa) MÁS la licencia de conducción del propietario (por la misma cédula). Con `ciudad` o `lat`/`lng` (geolocaliza la ciudad; manda sobre `ciudad`) el pico y placa se filtra a esa ciudad y agrega `picoYPlaca.ubicacion`; sin ubicación trae todas las ciudades monitoreadas. El tipo de vehículo se detecta solo desde la clase RUNT; el dígito de placa evaluado lo fija cada ciudad y viene en `digitoPlaca` (por defecto primero para moto, último para carro). El bloque `vehicle` trae además la ficha técnica del registro —capacidad de carga y peso bruto en kg, ejes, llantas, pasajeros, puertas, número de serie y de licencia de tránsito, y las señales `regrabados`, `repotenciado`, `importado`, `vehiculoEnsenanza`, `antiguoClasico` y `seguridadEstado`—, más `tarjetaOperacion` y `polizasRc` cuando el vehículo es de servicio público. Cada campo llega `null` (o lista vacía) si el registro no lo reporta para ese vehículo: la ficha se llena por tipo, un vehículo de carga trae capacidad y ejes donde un automóvil trae pasajeros y puertas. Cuesta 2 créditos. Costo: 2 créditos por consulta con datos.",
-        "x-credits": 2,
+        "description": "Todo el conjunto de fuentes en UNA sola llamada: bundle vehicular completo (RUNT, SOAT, tecnomecánica, antecedentes, multas SIMIT, impuesto, avalúo FASECOLDA y pico y placa) MÁS la licencia de conducción del propietario (por la misma cédula). Con `ciudad` o `lat`/`lng` (geolocaliza la ciudad; manda sobre `ciudad`) el pico y placa se filtra a esa ciudad y agrega `picoYPlaca.ubicacion`; sin ubicación trae todas las ciudades monitoreadas. El tipo de vehículo se detecta solo desde la clase RUNT; el dígito de placa evaluado lo fija cada ciudad y viene en `digitoPlaca` (por defecto primero para moto, último para carro). El bloque `vehicle` trae además la ficha técnica del registro —capacidad de carga y peso bruto en kg, ejes, llantas, pasajeros, puertas, número de serie y de licencia de tránsito, y las señales `regrabados`, `repotenciado`, `importado`, `vehiculoEnsenanza`, `antiguoClasico` y `seguridadEstado`—, más `tarjetaOperacion` y `polizasRc` cuando el vehículo es de servicio público. Cada campo llega `null` (o lista vacía) si el registro no lo reporta para ese vehículo: la ficha se llena por tipo, un vehículo de carga trae capacidad y ejes donde un automóvil trae pasajeros y puertas. Cuesta 3 créditos: la mitad de lo que valen sueltas las fuentes que reúne. Costo: 3 créditos por consulta con datos.",
+        "x-credits": 3,
         "security": [
           {
             "ApiKeyAuth": []
@@ -365,7 +365,7 @@
                     "mode": "live",
                     "fetchedAt": "2026-07-24T15:04:05.000Z"
                   },
-                  "cost": 2
+                  "cost": 3
                 }
               }
             }
