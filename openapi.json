@@ -69,7 +69,7 @@
         "tags": [
           "Reporte completo"
         ],
-        "description": "Todo el conjunto de fuentes en UNA sola llamada: bundle vehicular completo (RUNT, SOAT, tecnomecánica, antecedentes, multas SIMIT, impuesto, avalúo FASECOLDA y pico y placa) MÁS la licencia de conducción del propietario (por la misma cédula). Con `ciudad` o `lat`/`lng` (geolocaliza la ciudad; manda sobre `ciudad`) el pico y placa se filtra a esa ciudad y agrega `picoYPlaca.ubicacion`; sin ubicación trae todas las ciudades monitoreadas. El tipo de vehículo se detecta solo desde la clase RUNT; el dígito de placa evaluado lo fija cada ciudad y viene en `digitoPlaca` (por defecto primero para moto, último para carro). El bloque `vehicle` trae además la ficha técnica del registro —capacidad de carga y peso bruto en kg, ejes, llantas, pasajeros, puertas, número de serie y de licencia de tránsito, y las señales `regrabados`, `repotenciado`, `importado`, `vehiculoEnsenanza`, `antiguoClasico` y `seguridadEstado`—, más `tarjetaOperacion` y `polizasRc` cuando el vehículo es de servicio público. Cada campo llega `null` (o lista vacía) si el registro no lo reporta para ese vehículo: la ficha se llena por tipo, un vehículo de carga trae capacidad y ejes donde un automóvil trae pasajeros y puertas. Cuesta 3 créditos: la mitad de lo que valen sueltas las fuentes que reúne. Costo: 3 créditos por consulta con datos.",
+        "description": "Todo el conjunto de fuentes en UNA sola llamada: bundle vehicular completo (RUNT, SOAT, tecnomecánica, antecedentes, multas SIMIT, impuesto, avalúo FASECOLDA y pico y placa) MÁS la licencia de conducción del propietario (por la misma cédula). Con `ciudad` o `lat`/`lng` (geolocaliza la ciudad; manda sobre `ciudad`) el pico y placa se filtra a esa ciudad y agrega `picoYPlaca.ubicacion`; sin ubicación trae todas las ciudades monitoreadas. El tipo de vehículo se detecta solo desde la clase RUNT; el dígito de placa evaluado lo fija cada ciudad y viene en `digitoPlaca` (por defecto primero para moto, último para carro). El bloque `vehicle` trae además la ficha técnica del registro —capacidad de carga y peso bruto en kg, ejes, llantas, pasajeros, puertas, número de serie y de licencia de tránsito, y las señales `regrabados`, `repotenciado`, `importado`, `vehiculoEnsenanza`, `antiguoClasico` y `seguridadEstado`—, más `tarjetaOperacion` y `polizasRc` (con sus amparos) cuando el vehículo es de servicio público. Desde 0.71.0 llega también el HISTÓRICO completo, no solo lo vigente: `vehicle.tramites` (matrícula inicial, traspasos, cambios de color o de servicio, con fecha, organismo y estado), `soat.historico` y `rtm.historico` con todas las vigencias registradas, `vehicle.normalizacion` cuando el registro marca deficiencia de matrícula, el número de oficio de cada limitación en `antecedentes.embargos[].documento`, y en SIMIT el `departamento` y el `estadoCartera` de cada comparendo más el detalle de los `acuerdos` de pago. Cada campo llega `null` (o lista vacía) si el registro no lo reporta para ese vehículo: la ficha se llena por tipo, un vehículo de carga trae capacidad y ejes donde un automóvil trae pasajeros y puertas. Cuesta 3 créditos: la mitad de lo que valen sueltas las fuentes que reúne. Costo: 3 créditos por consulta con datos.",
         "x-credits": 3,
         "security": [
           {
@@ -202,7 +202,18 @@
                       "antiguoClasico": false,
                       "seguridadEstado": false,
                       "tarjetaOperacion": null,
-                      "polizasRc": []
+                      "polizasRc": [],
+                      "tramites": [
+                        {
+                          "id": "267205667",
+                          "fecha": "2023-03-15",
+                          "estado": "AUTORIZADA",
+                          "tramite": "TRÁMITE MATRÍCULA INICIAL",
+                          "entidad": "SECRETARIA DISTRITAL DE MOVILIDAD DE BOGOTA",
+                          "registro": "RNA"
+                        }
+                      ],
+                      "normalizacion": null
                     }
                   },
                   "soat": {
@@ -216,7 +227,20 @@
                       "poliza": "1508006948335000",
                       "fechaExpedicion": "20/09/2025",
                       "fechaVencimiento": "19/09/2026",
-                      "diasParaVencer": 69
+                      "diasParaVencer": 69,
+                      "historico": [
+                        {
+                          "poliza": "1508006948335000",
+                          "aseguradora": "SBS SEGUROS",
+                          "fechaExpedicion": "2025-09-20",
+                          "fechaInicioVigencia": "2025-09-20",
+                          "fechaVencimiento": "2026-09-19",
+                          "estado": "VIGENTE",
+                          "estadoSoat": "EMITIDA",
+                          "tipoTarifa": "120",
+                          "origen": "NACIONAL"
+                        }
+                      ]
                     }
                   },
                   "rtm": {
@@ -232,7 +256,19 @@
                       "fechaExpedicion": "22/09/2025",
                       "fechaVencimiento": "22/09/2026",
                       "diasParaVencer": 72,
-                      "certificadoNumero": "189733821"
+                      "certificadoNumero": "189733821",
+                      "historico": [
+                        {
+                          "certificadoNumero": "189733821",
+                          "cda": "CDA FONTIBON S.A.S",
+                          "fechaExpedicion": "2025-09-22",
+                          "fechaVencimiento": "2026-09-22",
+                          "estado": "APROBADA",
+                          "tipoRevision": "REVISION TECNICO-MECANICO",
+                          "vigente": true,
+                          "informacionConsistente": true
+                        }
+                      ]
                     }
                   },
                   "antecedentes": {
@@ -263,7 +299,12 @@
                       "totalDeuda": 0,
                       "totalMultas": 0,
                       "multas": [],
-                      "acuerdosPago": 0
+                      "acuerdosPago": 0,
+                      "acuerdos": [],
+                      "pazSalvo": true,
+                      "suspendida": false,
+                      "cancelada": false,
+                      "cursos": 0
                     }
                   },
                   "impuestos": {
