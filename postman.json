@@ -1689,6 +1689,231 @@
       ]
     },
     {
+      "name": "Revisión técnica Perú",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/revision-tecnica-pe",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "revision-tecnica-pe"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"placa\": \"ABC123\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Certificados de inspección técnica vehicular (CITV) de un vehículo peruano por placa: el equivalente a la tecnomecánica. Devuelve si hay un certificado vigente y hasta cuándo, y los **tres certificados más recientes** (es lo que publica el registro) con número, vigencia, resultado, estado, centro de inspección, tipo de servicio y observaciones. `status` es `ok` con certificado vigente, `warn` si solo hay historial vencido e `info` sin certificados. Una placa sin certificados es una respuesta válida (`certificados` vacío, `vigente: false`) y cobra. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `placa` (string, obligatorio). Placa peruana. Se aceptan guiones (`ABC-123`).\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+      },
+      "response": [
+        {
+          "name": "200 OK — ejemplo",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/revision-tecnica-pe",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "revision-tecnica-pe"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"placa\": \"ABC123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Certificados de inspección técnica vehicular (CITV) de un vehículo peruano por placa: el equivalente a la tecnomecánica. Devuelve si hay un certificado vigente y hasta cuándo, y los **tres certificados más recientes** (es lo que publica el registro) con número, vigencia, resultado, estado, centro de inspección, tipo de servicio y observaciones. `status` es `ok` con certificado vigente, `warn` si solo hay historial vencido e `info` sin certificados. Una placa sin certificados es una respuesta válida (`certificados` vacío, `vigente: false`) y cobra. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `placa` (string, obligatorio). Placa peruana. Se aceptan guiones (`ABC-123`).\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"source\": \"rtm\",\n  \"status\": \"ok\",\n  \"data\": {\n    \"pais\": \"PE\",\n    \"placa\": \"ABC123\",\n    \"vigente\": true,\n    \"vigenteHasta\": \"2027-03-09\",\n    \"certificados\": [\n      {\n        \"numero\": \"C-2026-013-123-003563\",\n        \"vigenciaInicio\": \"2026-03-09\",\n        \"vigenciaFin\": \"2027-03-09\",\n        \"resultado\": \"APROBADO\",\n        \"estado\": \"VIGENTE\",\n        \"centro\": \"REVISIONES TECNICAS DEL PERU SOCIEDAD ANONIMA CERRADA - REVISIONES TECNICAS DEL PERU S.A.C.\",\n        \"direccion\": \"VIA AUXILIAR DE LA AV. PANAMERICANA SUR A LA ALTURA DEL KM. 11.300 - LIMA - LIMA - SAN JUAN DE MIRAFLORES\",\n        \"ambito\": null,\n        \"tipoServicio\": \"PARTICULAR\",\n        \"observacion\": \"Sin observaciones\"\n      },\n      {\n        \"numero\": \"C-2025-013-123-001484\",\n        \"vigenciaInicio\": \"2025-02-07\",\n        \"vigenciaFin\": \"2026-02-07\",\n        \"resultado\": \"APROBADO\",\n        \"estado\": \"VENCIDO\",\n        \"centro\": \"REVISIONES TECNICAS DEL PERU SOCIEDAD ANONIMA CERRADA - REVISIONES TECNICAS DEL PERU S.A.C.\",\n        \"direccion\": \"VIA AUXILIAR DE LA AV. PANAMERICANA SUR A LA ALTURA DEL KM. 11.300 - LIMA - LIMA - SAN JUAN DE MIRAFLORES\",\n        \"ambito\": null,\n        \"tipoServicio\": \"PARTICULAR\",\n        \"observacion\": \"Sin observaciones\"\n      },\n      {\n        \"numero\": \"C-2024-013-123-001548\",\n        \"vigenciaInicio\": \"2024-02-07\",\n        \"vigenciaFin\": \"2025-02-07\",\n        \"resultado\": \"APROBADO\",\n        \"estado\": \"VENCIDO\",\n        \"centro\": \"REVISIONES TECNICAS DEL PERU SOCIEDAD ANONIMA CERRADA - REVISIONES TECNICAS DEL PERU S.A.C.\",\n        \"direccion\": \"VIA AUXILIAR DE LA AV. PANAMERICANA SUR A LA ALTURA DEL KM. 11.300 - LIMA - LIMA - SAN JUAN DE MIRAFLORES\",\n        \"ambito\": null,\n        \"tipoServicio\": \"PARTICULAR\",\n        \"observacion\": \"Sin observaciones\"\n      }\n    ]\n  },\n  \"portalUrl\": \"https://rec.mtc.gob.pe/Citv/ArConsultaCitv\",\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\",\n  \"cost\": 1\n}"
+        }
+      ]
+    },
+    {
+      "name": "Papeletas Perú",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/multas-pe",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "multas-pe"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"placa\": \"ABC123\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Papeletas de tránsito PENDIENTES de un vehículo peruano por placa, unidas de dos registros: el récord nacional de infracciones en carreteras (`origen: \"nacional\"`) y las papeletas de Lima Metropolitana (`origen: \"lima\"`). Devuelve el total, las pendientes, el monto pendiente en soles y cada papeleta con número, fecha, código y descripción de la infracción, gravedad, monto, estado y entidad. `monto` es la deuda viva (importe + costas − descuento); el registro nacional no publica montos, así que ahí llega `null` y `montoPendiente` suma solo las que lo traen. `descripcion` es el texto de la infracción según el Reglamento Nacional de Tránsito y llega `null` cuando el código pertenece a otro reglamento; `tipoRegistro` es el rótulo con que el registro nacional clasifica el documento y nunca describe la infracción. Las pagadas no aparecen. El bloque `cobertura` dice cómo respondió cada registro (`ok`, `sin_datos`, `error`): si uno falla, el otro igual se entrega. `status` es `warn` con pendientes y `ok` sin ellas. Una placa sin papeletas es una respuesta válida y cobra. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `placa` (string, obligatorio). Placa peruana. Se aceptan guiones (`ABC-123`).\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+      },
+      "response": [
+        {
+          "name": "200 OK — ejemplo",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/multas-pe",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "multas-pe"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"placa\": \"ABC123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Papeletas de tránsito PENDIENTES de un vehículo peruano por placa, unidas de dos registros: el récord nacional de infracciones en carreteras (`origen: \"nacional\"`) y las papeletas de Lima Metropolitana (`origen: \"lima\"`). Devuelve el total, las pendientes, el monto pendiente en soles y cada papeleta con número, fecha, código y descripción de la infracción, gravedad, monto, estado y entidad. `monto` es la deuda viva (importe + costas − descuento); el registro nacional no publica montos, así que ahí llega `null` y `montoPendiente` suma solo las que lo traen. `descripcion` es el texto de la infracción según el Reglamento Nacional de Tránsito y llega `null` cuando el código pertenece a otro reglamento; `tipoRegistro` es el rótulo con que el registro nacional clasifica el documento y nunca describe la infracción. Las pagadas no aparecen. El bloque `cobertura` dice cómo respondió cada registro (`ok`, `sin_datos`, `error`): si uno falla, el otro igual se entrega. `status` es `warn` con pendientes y `ok` sin ellas. Una placa sin papeletas es una respuesta válida y cobra. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `placa` (string, obligatorio). Placa peruana. Se aceptan guiones (`ABC-123`).\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"source\": \"multas\",\n  \"status\": \"warn\",\n  \"data\": {\n    \"pais\": \"PE\",\n    \"placa\": \"ABC123\",\n    \"total\": 2,\n    \"pendientes\": 2,\n    \"montoPendiente\": 440,\n    \"papeletas\": [\n      {\n        \"origen\": \"lima\",\n        \"numero\": \"15285163\",\n        \"fecha\": \"2024-11-11\",\n        \"codigo\": \"L04\",\n        \"descripcion\": \"Abrir o dejar abierta la puerta de un vehículo estacionado, dificultando la circulación vehicular.\",\n        \"gravedad\": \"LEVE\",\n        \"tipoRegistro\": null,\n        \"monto\": 440,\n        \"estado\": \"PENDIENTE\",\n        \"entidad\": \"MUNICIPALIDAD METROPOLITANA DE LIMA\"\n      },\n      {\n        \"origen\": \"nacional\",\n        \"numero\": \"8325001207\",\n        \"fecha\": \"2025-04-16\",\n        \"codigo\": \"G11\",\n        \"descripcion\": \"Circular, estacionar o detenerse sobre una isla de encauzamiento, canalizadora, de refugio o divisoria del tránsito, marcas delimitadoras de carriles, separadores centrales, bermas, aceras, áreas verdes, pasos peatonales, jardines o rampas para minusválidos.\",\n        \"gravedad\": \"GRAVE\",\n        \"tipoRegistro\": \"PAPELETAS TRANSITO\",\n        \"monto\": null,\n        \"estado\": \"PENDIENTE\",\n        \"entidad\": \"AUTORIDAD NACIONAL DE TRANSPORTE TERRESTRE\"\n      }\n    ],\n    \"cobertura\": {\n      \"nacional\": \"ok\",\n      \"lima\": \"ok\"\n    }\n  },\n  \"portalUrl\": \"https://www.sutran.gob.pe/consultas/record-de-infracciones/record-de-infracciones/\",\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\",\n  \"cost\": 1\n}"
+        }
+      ]
+    },
+    {
+      "name": "Licencia Perú",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/licencia-pe",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "licencia-pe"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"documento\": \"12345678\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Récord del conductor peruano por documento: licencias de conducir con número, clase y categoría, estado (`VIGENTE` o compuestos como `CANCELADA/CONDUCTOR INHABILITADO`), fechas de expedición y revalidación y restricciones, más las sanciones (resolución, fechas de inicio y fin, y `estado` derivado de esas fechas). No devuelve nombre ni datos de la persona: solo lo que describe la licencia. `puntos` llega siempre `null`: el registro no los publica. `status` es `ok` con licencia vigente, `warn` con cualquier otro estado o sanción vigente e `info` sin licencia. Un documento sin licencia es una respuesta válida (`tieneLicencia: false`) y cobra; un DNI que no tenga exactamente 8 dígitos responde 400 `consulta_invalida` sin cobrar. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `documento` (string, obligatorio). DNI (8 dígitos) o carné de extranjería del conductor. Alias aceptados: `dni`, `doc`.\n- `tipoDocumento` (string, opcional). Valores: `DNI`, `CE`. `DNI` (default, 8 dígitos) o `CE` (carné de extranjería, 9 dígitos).\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+      },
+      "response": [
+        {
+          "name": "200 OK — ejemplo",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/licencia-pe",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "licencia-pe"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documento\": \"12345678\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Récord del conductor peruano por documento: licencias de conducir con número, clase y categoría, estado (`VIGENTE` o compuestos como `CANCELADA/CONDUCTOR INHABILITADO`), fechas de expedición y revalidación y restricciones, más las sanciones (resolución, fechas de inicio y fin, y `estado` derivado de esas fechas). No devuelve nombre ni datos de la persona: solo lo que describe la licencia. `puntos` llega siempre `null`: el registro no los publica. `status` es `ok` con licencia vigente, `warn` con cualquier otro estado o sanción vigente e `info` sin licencia. Un documento sin licencia es una respuesta válida (`tieneLicencia: false`) y cobra; un DNI que no tenga exactamente 8 dígitos responde 400 `consulta_invalida` sin cobrar. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `documento` (string, obligatorio). DNI (8 dígitos) o carné de extranjería del conductor. Alias aceptados: `dni`, `doc`.\n- `tipoDocumento` (string, opcional). Valores: `DNI`, `CE`. `DNI` (default, 8 dígitos) o `CE` (carné de extranjería, 9 dígitos).\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"source\": \"licencia\",\n  \"status\": \"ok\",\n  \"data\": {\n    \"pais\": \"PE\",\n    \"documento\": \"12345678\",\n    \"tipoDocumento\": \"DNI\",\n    \"tieneLicencia\": true,\n    \"licencias\": [\n      {\n        \"numero\": \"AB0040865\",\n        \"clase\": \"A\",\n        \"categoria\": \"I\",\n        \"estado\": \"VIGENTE\",\n        \"fechaExpedicion\": \"2019-05-10\",\n        \"fechaRevalidacion\": \"2029-05-10\",\n        \"restricciones\": \"SIN RESTRICCIONES\"\n      }\n    ],\n    \"sanciones\": [],\n    \"puntos\": null\n  },\n  \"portalUrl\": \"https://recordconductor.mtc.gob.pe/\",\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\",\n  \"cost\": 1\n}"
+        }
+      ]
+    },
+    {
       "name": "Antecedentes disciplinarios",
       "request": {
         "method": "POST",

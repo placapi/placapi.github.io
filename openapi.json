@@ -53,6 +53,10 @@
     {
       "name": "Empresas y Estado",
       "description": "Debida diligencia sobre la contraparte: registro mercantil, contratación con el Estado, procesos judiciales y declaración de bienes y rentas."
+    },
+    {
+      "name": "Fuera de Colombia",
+      "description": "Perú por placa y por documento: ficha del vehículo, revisión técnica, papeletas y récord del conductor. México por placa."
     }
   ],
   "servers": [
@@ -2868,7 +2872,9 @@
       "post": {
         "operationId": "vehiculo-pe",
         "summary": "Vehículo Perú",
-        "tags": [],
+        "tags": [
+          "Fuera de Colombia"
+        ],
         "description": "Ficha técnica de un vehículo peruano por placa, desde el registro oficial de propiedad vehicular. Devuelve los 13 campos canónicos comunes a todos los países; en Perú el registro publica 5 de ellos y el resto llega en `null`, listados en `cobertura.noPublicados`. Una placa fuera del registro responde `no_encontrado`. No incluye datos del propietario. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
@@ -2983,7 +2989,9 @@
       "post": {
         "operationId": "vehiculo-mx",
         "summary": "Vehículo México",
-        "tags": [],
+        "tags": [
+          "Fuera de Colombia"
+        ],
         "description": "Ficha técnica de un vehículo mexicano por placa, desde el registro público vehicular nacional, más su estado de robo cruzado contra cuatro fuentes: fiscalía, aseguradoras, avisos ministeriales y el registro de robo de EE. UU./Canadá. Devuelve los 13 campos canónicos comunes a todos los países; los que el registro no publica llegan en `null` y quedan listados en `cobertura.noPublicados`. Un vehículo fuera del padrón responde `no_inscrito` (la cobertura del registro es parcial y eso no es un error). No incluye datos del propietario. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
@@ -3075,6 +3083,361 @@
                   "portalUrl": "https://www2.repuve.gob.mx:8443/ciudadania/",
                   "mode": "live",
                   "fetchedAt": "2026-07-24T15:04:05.000Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cuerpo inválido: placa o documento con formato incorrecto (code: bad_request)."
+          },
+          "401": {
+            "description": "No autenticado o API key inválida (code: unauthorized)."
+          },
+          "402": {
+            "description": "Sin créditos suficientes (code: no_credits)."
+          },
+          "404": {
+            "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra nunca (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
+          },
+          "429": {
+            "description": "Rate limit excedido: 1000 consultas/minuto por API key (code: rate_limited). Respeta Retry-After."
+          },
+          "500": {
+            "description": "Error interno (code: internal_error)."
+          },
+          "502": {
+            "description": "La fuente oficial no respondió a tiempo (code: source_error). Reintentar más tarde. No se cobra crédito."
+          }
+        }
+      }
+    },
+    "/revision-tecnica-pe": {
+      "post": {
+        "operationId": "revision-tecnica-pe",
+        "summary": "Revisión técnica Perú",
+        "tags": [
+          "Fuera de Colombia"
+        ],
+        "description": "Certificados de inspección técnica vehicular (CITV) de un vehículo peruano por placa: el equivalente a la tecnomecánica. Devuelve si hay un certificado vigente y hasta cuándo, y los **tres certificados más recientes** (es lo que publica el registro) con número, vigencia, resultado, estado, centro de inspección, tipo de servicio y observaciones. `status` es `ok` con certificado vigente, `warn` si solo hay historial vencido e `info` sin certificados. Una placa sin certificados es una respuesta válida (`certificados` vacío, `vigente: false`) y cobra. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
+        "x-credits": 1,
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "placa"
+                ],
+                "properties": {
+                  "placa": {
+                    "type": "string",
+                    "example": "ABC123",
+                    "description": "Placa peruana. Se aceptan guiones (`ABC-123`)."
+                  },
+                  "refresh": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+                  }
+                }
+              },
+              "example": {
+                "placa": "ABC123"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta ejecutada. Cada fuente reporta su propio status (ok, empty, error).",
+            "content": {
+              "application/json": {
+                "example": {
+                  "source": "rtm",
+                  "status": "ok",
+                  "data": {
+                    "pais": "PE",
+                    "placa": "ABC123",
+                    "vigente": true,
+                    "vigenteHasta": "2027-03-09",
+                    "certificados": [
+                      {
+                        "numero": "C-2026-013-123-003563",
+                        "vigenciaInicio": "2026-03-09",
+                        "vigenciaFin": "2027-03-09",
+                        "resultado": "APROBADO",
+                        "estado": "VIGENTE",
+                        "centro": "REVISIONES TECNICAS DEL PERU SOCIEDAD ANONIMA CERRADA - REVISIONES TECNICAS DEL PERU S.A.C.",
+                        "direccion": "VIA AUXILIAR DE LA AV. PANAMERICANA SUR A LA ALTURA DEL KM. 11.300 - LIMA - LIMA - SAN JUAN DE MIRAFLORES",
+                        "ambito": null,
+                        "tipoServicio": "PARTICULAR",
+                        "observacion": "Sin observaciones"
+                      },
+                      {
+                        "numero": "C-2025-013-123-001484",
+                        "vigenciaInicio": "2025-02-07",
+                        "vigenciaFin": "2026-02-07",
+                        "resultado": "APROBADO",
+                        "estado": "VENCIDO",
+                        "centro": "REVISIONES TECNICAS DEL PERU SOCIEDAD ANONIMA CERRADA - REVISIONES TECNICAS DEL PERU S.A.C.",
+                        "direccion": "VIA AUXILIAR DE LA AV. PANAMERICANA SUR A LA ALTURA DEL KM. 11.300 - LIMA - LIMA - SAN JUAN DE MIRAFLORES",
+                        "ambito": null,
+                        "tipoServicio": "PARTICULAR",
+                        "observacion": "Sin observaciones"
+                      },
+                      {
+                        "numero": "C-2024-013-123-001548",
+                        "vigenciaInicio": "2024-02-07",
+                        "vigenciaFin": "2025-02-07",
+                        "resultado": "APROBADO",
+                        "estado": "VENCIDO",
+                        "centro": "REVISIONES TECNICAS DEL PERU SOCIEDAD ANONIMA CERRADA - REVISIONES TECNICAS DEL PERU S.A.C.",
+                        "direccion": "VIA AUXILIAR DE LA AV. PANAMERICANA SUR A LA ALTURA DEL KM. 11.300 - LIMA - LIMA - SAN JUAN DE MIRAFLORES",
+                        "ambito": null,
+                        "tipoServicio": "PARTICULAR",
+                        "observacion": "Sin observaciones"
+                      }
+                    ]
+                  },
+                  "portalUrl": "https://rec.mtc.gob.pe/Citv/ArConsultaCitv",
+                  "mode": "live",
+                  "fetchedAt": "2026-07-24T15:04:05.000Z",
+                  "cost": 1
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cuerpo inválido: placa o documento con formato incorrecto (code: bad_request)."
+          },
+          "401": {
+            "description": "No autenticado o API key inválida (code: unauthorized)."
+          },
+          "402": {
+            "description": "Sin créditos suficientes (code: no_credits)."
+          },
+          "404": {
+            "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra nunca (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
+          },
+          "429": {
+            "description": "Rate limit excedido: 1000 consultas/minuto por API key (code: rate_limited). Respeta Retry-After."
+          },
+          "500": {
+            "description": "Error interno (code: internal_error)."
+          },
+          "502": {
+            "description": "La fuente oficial no respondió a tiempo (code: source_error). Reintentar más tarde. No se cobra crédito."
+          }
+        }
+      }
+    },
+    "/multas-pe": {
+      "post": {
+        "operationId": "multas-pe",
+        "summary": "Papeletas Perú",
+        "tags": [
+          "Fuera de Colombia"
+        ],
+        "description": "Papeletas de tránsito PENDIENTES de un vehículo peruano por placa, unidas de dos registros: el récord nacional de infracciones en carreteras (`origen: \"nacional\"`) y las papeletas de Lima Metropolitana (`origen: \"lima\"`). Devuelve el total, las pendientes, el monto pendiente en soles y cada papeleta con número, fecha, código y descripción de la infracción, gravedad, monto, estado y entidad. `monto` es la deuda viva (importe + costas − descuento); el registro nacional no publica montos, así que ahí llega `null` y `montoPendiente` suma solo las que lo traen. `descripcion` es el texto de la infracción según el Reglamento Nacional de Tránsito y llega `null` cuando el código pertenece a otro reglamento; `tipoRegistro` es el rótulo con que el registro nacional clasifica el documento y nunca describe la infracción. Las pagadas no aparecen. El bloque `cobertura` dice cómo respondió cada registro (`ok`, `sin_datos`, `error`): si uno falla, el otro igual se entrega. `status` es `warn` con pendientes y `ok` sin ellas. Una placa sin papeletas es una respuesta válida y cobra. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
+        "x-credits": 1,
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "placa"
+                ],
+                "properties": {
+                  "placa": {
+                    "type": "string",
+                    "example": "ABC123",
+                    "description": "Placa peruana. Se aceptan guiones (`ABC-123`)."
+                  },
+                  "refresh": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+                  }
+                }
+              },
+              "example": {
+                "placa": "ABC123"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta ejecutada. Cada fuente reporta su propio status (ok, empty, error).",
+            "content": {
+              "application/json": {
+                "example": {
+                  "source": "multas",
+                  "status": "warn",
+                  "data": {
+                    "pais": "PE",
+                    "placa": "ABC123",
+                    "total": 2,
+                    "pendientes": 2,
+                    "montoPendiente": 440,
+                    "papeletas": [
+                      {
+                        "origen": "lima",
+                        "numero": "15285163",
+                        "fecha": "2024-11-11",
+                        "codigo": "L04",
+                        "descripcion": "Abrir o dejar abierta la puerta de un vehículo estacionado, dificultando la circulación vehicular.",
+                        "gravedad": "LEVE",
+                        "tipoRegistro": null,
+                        "monto": 440,
+                        "estado": "PENDIENTE",
+                        "entidad": "MUNICIPALIDAD METROPOLITANA DE LIMA"
+                      },
+                      {
+                        "origen": "nacional",
+                        "numero": "8325001207",
+                        "fecha": "2025-04-16",
+                        "codigo": "G11",
+                        "descripcion": "Circular, estacionar o detenerse sobre una isla de encauzamiento, canalizadora, de refugio o divisoria del tránsito, marcas delimitadoras de carriles, separadores centrales, bermas, aceras, áreas verdes, pasos peatonales, jardines o rampas para minusválidos.",
+                        "gravedad": "GRAVE",
+                        "tipoRegistro": "PAPELETAS TRANSITO",
+                        "monto": null,
+                        "estado": "PENDIENTE",
+                        "entidad": "AUTORIDAD NACIONAL DE TRANSPORTE TERRESTRE"
+                      }
+                    ],
+                    "cobertura": {
+                      "nacional": "ok",
+                      "lima": "ok"
+                    }
+                  },
+                  "portalUrl": "https://www.sutran.gob.pe/consultas/record-de-infracciones/record-de-infracciones/",
+                  "mode": "live",
+                  "fetchedAt": "2026-07-24T15:04:05.000Z",
+                  "cost": 1
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cuerpo inválido: placa o documento con formato incorrecto (code: bad_request)."
+          },
+          "401": {
+            "description": "No autenticado o API key inválida (code: unauthorized)."
+          },
+          "402": {
+            "description": "Sin créditos suficientes (code: no_credits)."
+          },
+          "404": {
+            "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra nunca (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
+          },
+          "429": {
+            "description": "Rate limit excedido: 1000 consultas/minuto por API key (code: rate_limited). Respeta Retry-After."
+          },
+          "500": {
+            "description": "Error interno (code: internal_error)."
+          },
+          "502": {
+            "description": "La fuente oficial no respondió a tiempo (code: source_error). Reintentar más tarde. No se cobra crédito."
+          }
+        }
+      }
+    },
+    "/licencia-pe": {
+      "post": {
+        "operationId": "licencia-pe",
+        "summary": "Licencia Perú",
+        "tags": [
+          "Fuera de Colombia"
+        ],
+        "description": "Récord del conductor peruano por documento: licencias de conducir con número, clase y categoría, estado (`VIGENTE` o compuestos como `CANCELADA/CONDUCTOR INHABILITADO`), fechas de expedición y revalidación y restricciones, más las sanciones (resolución, fechas de inicio y fin, y `estado` derivado de esas fechas). No devuelve nombre ni datos de la persona: solo lo que describe la licencia. `puntos` llega siempre `null`: el registro no los publica. `status` es `ok` con licencia vigente, `warn` con cualquier otro estado o sanción vigente e `info` sin licencia. Un documento sin licencia es una respuesta válida (`tieneLicencia: false`) y cobra; un DNI que no tenga exactamente 8 dígitos responde 400 `consulta_invalida` sin cobrar. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
+        "x-credits": 1,
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "documento"
+                ],
+                "properties": {
+                  "documento": {
+                    "type": "string",
+                    "example": "12345678",
+                    "description": "DNI (8 dígitos) o carné de extranjería del conductor. Alias aceptados: `dni`, `doc`."
+                  },
+                  "tipoDocumento": {
+                    "type": "string",
+                    "example": "DNI",
+                    "description": "`DNI` (default, 8 dígitos) o `CE` (carné de extranjería, 9 dígitos).",
+                    "enum": [
+                      "DNI",
+                      "CE"
+                    ]
+                  },
+                  "refresh": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+                  }
+                }
+              },
+              "example": {
+                "documento": "12345678"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta ejecutada. Cada fuente reporta su propio status (ok, empty, error).",
+            "content": {
+              "application/json": {
+                "example": {
+                  "source": "licencia",
+                  "status": "ok",
+                  "data": {
+                    "pais": "PE",
+                    "documento": "12345678",
+                    "tipoDocumento": "DNI",
+                    "tieneLicencia": true,
+                    "licencias": [
+                      {
+                        "numero": "AB0040865",
+                        "clase": "A",
+                        "categoria": "I",
+                        "estado": "VIGENTE",
+                        "fechaExpedicion": "2019-05-10",
+                        "fechaRevalidacion": "2029-05-10",
+                        "restricciones": "SIN RESTRICCIONES"
+                      }
+                    ],
+                    "sanciones": [],
+                    "puntos": null
+                  },
+                  "portalUrl": "https://recordconductor.mtc.gob.pe/",
+                  "mode": "live",
+                  "fetchedAt": "2026-07-24T15:04:05.000Z",
+                  "cost": 1
                 }
               }
             }
