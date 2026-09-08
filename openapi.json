@@ -325,12 +325,31 @@
                   },
                   "impuestos": {
                     "source": "Bogotá D.C.",
-                    "status": "info",
+                    "status": "warn",
                     "fetchedAt": "2026-07-24T15:04:05.000Z",
                     "mode": "live",
-                    "data": null,
-                    "portalUrl": "https://www.haciendabogota.gov.co/es/sdh/pagos-impuesto-vehiculos",
-                    "error": "Tu vehículo está matriculado en Bogotá D.C. Paga tu impuesto en el portal oficial del departamento."
+                    "data": {
+                      "departamento": "Bogotá D.C.",
+                      "anios": [
+                        {
+                          "anio": 2024,
+                          "valor": 412000,
+                          "pagado": true
+                        },
+                        {
+                          "anio": 2025,
+                          "valor": 438000,
+                          "pagado": true
+                        },
+                        {
+                          "anio": 2026,
+                          "valor": 465000,
+                          "pagado": false
+                        }
+                      ],
+                      "totalPendiente": 465000
+                    },
+                    "portalUrl": "https://www.haciendabogota.gov.co/es/sdh/pagos-impuesto-vehiculos"
                   },
                   "fasecolda": {
                     "source": "avaluo",
