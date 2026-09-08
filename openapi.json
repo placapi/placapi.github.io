@@ -5132,12 +5132,9 @@
                   "docType": {
                     "type": "string",
                     "example": "CC",
-                    "description": "Tipo de documento. Por defecto `CC`. Es un registro de personas naturales: con NIT responde 400 `tipo_documento_no_soportado` sin cobrar y sin tocar la fuente.",
+                    "description": "Tipo de documento: solo `CC` (cédula de ciudadanía). El registro valida la fecha de expedición contra la Registraduría y con cédula de extranjería, tarjeta de identidad o pasaporte su consulta no funciona (verificado el 8-sep-2026); esos tipos responden 400 sin cobrar y sin tocar la fuente.",
                     "enum": [
-                      "CC",
-                      "CE",
-                      "TI",
-                      "PA"
+                      "CC"
                     ]
                   },
                   "docNumber": {
